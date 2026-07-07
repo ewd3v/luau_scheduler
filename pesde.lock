@@ -4,3 +4,10 @@ format = 2
 name = "ewdev/scheduler"
 version = "0.0.0"
 target = "luau"
+
+[graph."ewdev/lute_std_lint@0.1.0 luau"]
+direct = ["lute_std_lint", { name = "ewdev/lute_std_lint", version = "^0.1.0", index = "default" }, "dev"]
+
+[graph."ewdev/lute_std_lint@0.1.0 luau".pkg_ref]
+ref_ty = "pesde"
+index_url = "https://github.com/pesde-pkg/index"
