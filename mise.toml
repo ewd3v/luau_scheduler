@@ -1,0 +1,103 @@
+[tools]
+cargo-binstall = "latest"
+"github:pesde-pkg/pesde" = "latest"
+"github:luau-lang/lute" = "1.0.0"
+"github:JohnnyMorganz/StyLua" = "2.5.2"
+"github:JohnnyMorganz/luau-lsp" = "1.68.0"
+"cargo:selene" = "0.31.0"                  # Github linux build is missing +x permission
+"npm:@changesets/cli" = "2.31.0"
+
+[vars]
+lint_paths = "src tests scripts"
+
+[tasks."scaffold"]
+description = "Scaffolds a new project"
+interactive = true
+run = "lute run scripts/scaffold.luau"
+depends_post = ["package:sync_version"]
+
+[tasks."package:install"]
+description = "Installs package dependencies"
+run = { task = "pesde:install" }
+
+[tasks."package:update_lockfile"]
+description = "Updates package lockfiles"
+run = { task = "pesde:update" }
+
+[tasks."package:sync_version"]
+hide = true
+run = "lute run scripts/sync_package_version"
+depends_post = ["package:update_lockfile"]
+
+[tasks."changesets:publish"]
+description = "Runs changesets publish workflow"
+raw_args = true
+run = "changeset publish"
+
+[tasks."changesets:version"]
+description = "Runs changesets version and syncs package versions"
+raw_args = true
+run = "changeset version"
+depends_post = ["package:sync_version"]
+
+[tasks."lute:setup"]
+hide = true
+raw_args = true
+run = "lute setup"
+
+[tasks."lint:setup"]
+description = "Runs required setup for proper linting to work"
+depends = ["lute:setup", "package:install"]
+
+[tasks."lint:luau-lsp"]
+hide = true
+depends = ["lint:setup"]
+raw_args = true
+run = "luau-lsp analyze --settings=.vscode/settings.json --ignore **/.lute/typedefs** {{vars.lint_paths}}"
+
+[tasks."lint:lute"]
+hide = true
+depends = ["lint:setup"]
+raw_args = true
+run = [
+    "lute lint {{vars.lint_paths}}",
+    "lute lint --no-default-lints --config src.config.luau src",
+]
+
+[tasks."lint:selene"]
+hide = true
+raw_args = true
+run = "selene --no-summary {{vars.lint_paths}}"
+
+[tasks."lint:stylua"]
+hide = true
+raw_args = true
+run = "stylua --check --respect-ignores {{vars.lint_paths}}"
+
+[tasks."lint"]
+description = "Lints the codebase"
+depends = ["lint:luau-lsp", "lint:lute", "lint:selene", "lint:stylua"]
+
+[tasks."test:lute"]
+hide = true
+depends = ["lute:setup"]
+raw_args = true
+run = "lute test"
+
+[tasks."test"]
+description = "Runs tests against the codebase"
+depends = ["test:lute"]
+
+[tasks."pesde:install"]
+description = "Installs pesde defined packages"
+raw_args = true
+run = "pesde install"
+sources = ["pesde.toml"]
+outputs = ["**/pesde.lock", "**/*_packages", "**/.pesde"]
+
+[tasks."pesde:update"]
+description = "Updates the pesde lockfile"
+raw_args = true
+run = "pesde update"
+sources = ["pesde.toml"]
+outputs = ["**/pesde.lock"]
