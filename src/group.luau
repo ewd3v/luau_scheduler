@@ -21,7 +21,7 @@ local function getStuck(children: { Node }, inDegree: { [Node]: number }): { str
 	return stuck
 end
 
--- Kahn's algoritm
+-- Kahn's algorithm
 local function sortChildren(group: Group)
 	local children = group.children
 	local inDegree: { [Node]: number } = {}
