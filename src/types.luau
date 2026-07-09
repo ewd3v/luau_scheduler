@@ -19,6 +19,8 @@ export type System = setmetatable<NodeBase & {
 export type SystemImpl = {
 	__index: SystemImpl,
 
+	Run: (self: System, dt: number) -> (),
+
 	-- NodeBase
 	Before: (self: System, dependent: Node) -> System,
 	After: (self: System, dependency: Node) -> System,
