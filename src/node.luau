@@ -36,28 +36,32 @@ local function getInvalidSiblingMessage(nodeA: Node, nodeB: Node): string
 		.. `\n{nodeB.name}: {getNodeDebugPathName(nodeB.parent)}`
 end
 
-local function before(node: Node, dependent: Node): Node
-	if not (node.parent ~= nil and node.parent == dependent.parent) then
-		error(getInvalidSiblingMessage(node, dependent), 2)
+local function resolveNodeParent(node: Node, sibling: Node): Group
+	if node.parent == nil and sibling.parent ~= nil then
+		sibling.parent:Add(node)
 	end
 
+	if not (node.parent ~= nil and node.parent == sibling.parent) then
+		error(getInvalidSiblingMessage(node, sibling), 2)
+	end
+
+	return node.parent
+end
+
+local function before(node: Node, dependent: Node): Node
+	local parent = resolveNodeParent(node, dependent)
 	dependent.dependencies[node] = true
 	node.dependents[dependent] = true
-
-	markChildrenOrderDirty(node.parent)
+	markChildrenOrderDirty(parent)
 
 	return node
 end
 
 local function after(node: Node, dependency: Node): Node
-	if not (node.parent ~= nil and node.parent == dependency.parent) then
-		error(getInvalidSiblingMessage(node, dependency), 2)
-	end
-
+	local parent = resolveNodeParent(node, dependency)
 	node.dependencies[dependency] = true
 	dependency.dependents[node] = true
-
-	markChildrenOrderDirty(node.parent)
+	markChildrenOrderDirty(parent)
 
 	return node
 end
@@ -78,6 +82,8 @@ return table.freeze({
 	markChildrenOrderDirty = markChildrenOrderDirty,
 
 	getNodeDebugPathName = getNodeDebugPathName,
+	resolveNodeParent = resolveNodeParent,
+
 	before = before,
 	after = after,
 	setEnabled = setEnabled,
