@@ -10,6 +10,7 @@ system.__index = system
 
 system.Before = node.before :: any
 system.After = node.after :: any
+system.In = node.in_ :: any
 system.SetEnabled = node.setEnabled
 
 function system.Run(self: System, dt: number)

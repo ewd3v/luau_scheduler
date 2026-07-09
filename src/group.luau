@@ -110,6 +110,7 @@ group.__index = group
 
 group.Before = node.before :: any
 group.After = node.after :: any
+group.In = node.in_ :: any
 group.SetEnabled = node.setEnabled
 
 function group.Add(self: Group, child: Node)

@@ -66,6 +66,11 @@ local function after(node: Node, dependency: Node): Node
 	return node
 end
 
+local function in_(node: Node, parent: Group): Node
+	parent:Add(node)
+	return node
+end
+
 local function setEnabled(node: Node, enabled: boolean)
 	if node.enabled == enabled then
 		return
@@ -86,5 +91,6 @@ return table.freeze({
 
 	before = before,
 	after = after,
+	in_ = in_,
 	setEnabled = setEnabled,
 })
