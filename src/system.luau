@@ -8,9 +8,9 @@ type SystemCallback = types.SystemCallback
 local system = {} :: SystemImpl
 system.__index = system
 
-system.Before = node.before :: any
-system.After = node.after :: any
-system.In = node.in_ :: any
+system.Before = node.insertBefore :: any
+system.After = node.insertAfter :: any
+system.In = node.insertIn :: any
 system.SetEnabled = node.setEnabled
 
 function system.Run(self: System, dt: number)

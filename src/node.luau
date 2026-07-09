@@ -48,7 +48,7 @@ local function resolveNodeParent(node: Node, sibling: Node): Group
 	return node.parent
 end
 
-local function before(node: Node, dependent: Node): Node
+local function insertBefore(node: Node, dependent: Node): Node
 	local parent = resolveNodeParent(node, dependent)
 	dependent.dependencies[node] = true
 	node.dependents[dependent] = true
@@ -57,7 +57,7 @@ local function before(node: Node, dependent: Node): Node
 	return node
 end
 
-local function after(node: Node, dependency: Node): Node
+local function insertAfter(node: Node, dependency: Node): Node
 	local parent = resolveNodeParent(node, dependency)
 	node.dependencies[dependency] = true
 	dependency.dependents[node] = true
@@ -66,7 +66,7 @@ local function after(node: Node, dependency: Node): Node
 	return node
 end
 
-local function in_(node: Node, parent: Group): Node
+local function insertIn(node: Node, parent: Group): Node
 	parent:Add(node)
 	return node
 end
@@ -89,8 +89,8 @@ return table.freeze({
 	getNodeDebugPathName = getNodeDebugPathName,
 	resolveNodeParent = resolveNodeParent,
 
-	before = before,
-	after = after,
-	in_ = in_,
+	insertBefore = insertBefore,
+	insertAfter = insertAfter,
+	insertIn = insertIn,
 	setEnabled = setEnabled,
 })

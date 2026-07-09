@@ -108,9 +108,9 @@ end
 local group = {} :: GroupImpl
 group.__index = group
 
-group.Before = node.before :: any
-group.After = node.after :: any
-group.In = node.in_ :: any
+group.Before = node.insertBefore :: any
+group.After = node.insertAfter :: any
+group.In = node.insertIn :: any
 group.SetEnabled = node.setEnabled
 
 function group.Add(self: Group, child: Node)
