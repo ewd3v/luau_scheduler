@@ -1,5 +1,84 @@
 export type Node = System | Group
 
+--[=[
+	@within Group
+
+	The name of this node.
+
+	@prop name string
+]=]
+--[=[
+	@within System
+
+	The name of this node.
+
+	@prop name string
+]=]
+
+--[=[
+	@within Group
+
+	What [Group] this node belongs to. When the parent runs, this node also runs (with the proper order).
+
+	@prop parent Group?
+]=]
+--[=[
+	@within System
+
+	What [Group] this node belongs to. When the parent runs, this node also runs (with the proper order).
+
+	@prop parent Group?
+]=]
+
+--[=[
+	@within Group
+
+	If the node is enabled or not. While disabled, this node won't run itself or any of it's children.
+
+	@prop enabled boolean
+]=]
+--[=[
+	@within System
+
+	If the node is enabled or not. While disabled, this node won't run itself or any of it's children.
+
+	@prop enabled boolean
+]=]
+
+--[=[
+	@within Group
+	@private
+
+	A set of [Nodes](Node) that should run before this one.
+
+	@prop _dependencies { [Node]: true }
+]=]
+--[=[
+	@within System
+	@private
+
+	A set of [Nodes](Node) that should run before this one.
+
+	@prop _dependencies { [Node]: true }
+]=]
+
+--[=[
+	@within Group
+	@private
+
+	A set of [Nodes](Node) that should run after this one.
+
+	@prop _dependents { [Node]: true }
+]=]
+--[=[
+	@within System
+	@private
+
+	A set of [Nodes](Node) that should run after this one.
+
+	@prop _dependents { [Node]: true }
+]=]
+
 type NodeBase = {
 	name: string,
 	parent: Group?,
@@ -13,7 +92,7 @@ export type SystemCallback = (dt: number) -> ()
 export type System = setmetatable<NodeBase & {
 	read kind: "System",
 
-	callback: SystemCallback,
+	read callback: SystemCallback,
 }, SystemImpl>
 
 export type SystemImpl = {

@@ -217,3 +217,10 @@ url_api = "https://api.github.com/repos/pesde-pkg/pesde/releases/assets/37661452
 [[tools."npm:@changesets/cli"]]
 version = "2.31.0"
 backend = "npm:@changesets/cli"
+
+[[tools."npm:moonwave"]]
+version = "1.4.2"
+backend = "npm:moonwave"
+
+[tools."npm:moonwave".options]
+aube_args = "--allow-low-downloads"
