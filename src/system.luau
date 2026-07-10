@@ -11,6 +11,7 @@ system.__index = system
 system.Before = node.insertBefore :: any
 system.After = node.insertAfter :: any
 system.In = node.insertIn :: any
+system.Resolve = node.resolve :: any
 system.SetEnabled = node.setEnabled
 
 function system.Run(self: System, dt: number)

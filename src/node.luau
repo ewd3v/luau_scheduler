@@ -71,6 +71,14 @@ local function insertIn(node: Node, parent: Group): Node
 	return node
 end
 
+local function resolve(node: Node): Node
+	if node.kind == "Group" then
+		node:GetFlattened()
+	end
+
+	return node
+end
+
 local function setEnabled(node: Node, enabled: boolean)
 	if node.enabled == enabled then
 		return
@@ -92,5 +100,6 @@ return table.freeze({
 	insertBefore = insertBefore,
 	insertAfter = insertAfter,
 	insertIn = insertIn,
+	resolve = resolve,
 	setEnabled = setEnabled,
 })

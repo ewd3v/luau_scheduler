@@ -111,6 +111,7 @@ group.__index = group
 group.Before = node.insertBefore :: any
 group.After = node.insertAfter :: any
 group.In = node.insertIn :: any
+group.Resolve = node.resolve :: any
 group.SetEnabled = node.setEnabled
 
 function group.Add(self: Group, child: Node)

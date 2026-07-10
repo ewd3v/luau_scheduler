@@ -25,6 +25,7 @@ export type SystemImpl = {
 	Before: (self: System, dependent: Node) -> System,
 	After: (self: System, dependency: Node) -> System,
 	In: (self: System, parent: Group) -> System,
+	Resolve: (self: System) -> System,
 	SetEnabled: (self: Node, enabled: boolean) -> (),
 }
 
@@ -50,6 +51,7 @@ export type GroupImpl = {
 	Before: (self: Group, dependency: Node) -> Group,
 	After: (self: Group, dependent: Node) -> Group,
 	In: (self: Group, parent: Group) -> Group,
+	Resolve: (self: Group) -> Group,
 	SetEnabled: (self: Node, enabled: boolean) -> (),
 }
 
