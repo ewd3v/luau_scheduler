@@ -11,7 +11,7 @@ type NodeBase = {
 export type SystemCallback = (dt: number) -> ()
 
 export type System = setmetatable<NodeBase & {
-	kind: "System",
+	read kind: "System",
 
 	callback: SystemCallback,
 }, SystemImpl>
@@ -30,7 +30,7 @@ export type SystemImpl = {
 }
 
 export type Group = setmetatable<NodeBase & {
-	kind: "Group",
+	read kind: "Group",
 
 	_children: { Node },
 	_flattened: { SystemCallback },
