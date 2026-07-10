@@ -178,7 +178,6 @@ end
 	A reference to [node.insertBefore].
 
 	@method Before
-	@param self Group
 	@param dependent Node
 	@return Group
 ]=]
@@ -190,7 +189,6 @@ Group.Before = node.insertBefore :: any
 	A reference to [node.insertAfter].
 
 	@method After
-	@param self Group
 	@param dependency Node
 	@return Group
 ]=]
@@ -202,7 +200,6 @@ Group.After = node.insertAfter :: any
 	A reference to [node.insertIn].
 
 	@method In
-	@param self Group
 	@param parent Group
 	@return Group
 ]=]
@@ -214,7 +211,6 @@ Group.In = node.insertIn :: any
 	A reference to [node.resolve].
 
 	@method Resolve
-	@param self Group
 	@return Group
 ]=]
 Group.Resolve = node.resolve :: any
@@ -225,7 +221,6 @@ Group.Resolve = node.resolve :: any
 	A reference to [node.setEnabled].
 
 	@method SetEnabled
-	@param self Group
 	@param enabled boolean
 ]=]
 Group.SetEnabled = node.setEnabled
