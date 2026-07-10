@@ -105,16 +105,34 @@ local function rebuildFlattened(group: Group)
 	group._flattenedDirty = false
 end
 
-local group = {} :: GroupImpl
-group.__index = group
+local Group = {} :: GroupImpl
+Group.__index = Group
 
-group.Before = node.insertBefore :: any
-group.After = node.insertAfter :: any
-group.In = node.insertIn :: any
-group.Resolve = node.resolve :: any
-group.SetEnabled = node.setEnabled
+function Group.new(name: string): Group
+	return setmetatable({
+		kind = "Group",
 
-function group.Add(self: Group, child: Node)
+		_children = {},
+		_flattened = {},
+		_childrenOrderDirty = false,
+		_flattenedDirty = false,
+
+		-- NodeBase
+		name = name,
+		parent = nil,
+		enabled = true,
+		_dependencies = {},
+		_dependents = {},
+	}, Group) :: any
+end
+
+Group.Before = node.insertBefore :: any
+Group.After = node.insertAfter :: any
+Group.In = node.insertIn :: any
+Group.Resolve = node.resolve :: any
+Group.SetEnabled = node.setEnabled
+
+function Group.Add(self: Group, child: Node)
 	if not (child.parent == nil) then
 		error(`{child.name} already belongs to a group ({node.getNodeDebugPathName(child.parent)}).`, 2)
 	end
@@ -124,7 +142,7 @@ function group.Add(self: Group, child: Node)
 	markChildrenOrderDirty(self)
 end
 
-function group.Remove(self: Group, child: Node)
+function Group.Remove(self: Group, child: Node)
 	local index = table.find(self._children, child)
 	if index == nil then
 		return
@@ -146,7 +164,7 @@ function group.Remove(self: Group, child: Node)
 	markChildrenOrderDirty(self)
 end
 
-function group.Run(self: Group, dt: number)
+function Group.Run(self: Group, dt: number)
 	if not self.enabled then
 		return
 	end
@@ -156,7 +174,7 @@ function group.Run(self: Group, dt: number)
 	end
 end
 
-function group.GetChildren(self: Group): { Node }
+function Group.GetChildren(self: Group): { Node }
 	if self._childrenOrderDirty then
 		sortChildren(self)
 	end
@@ -164,7 +182,7 @@ function group.GetChildren(self: Group): { Node }
 	return self._children
 end
 
-function group.GetFlattened(self: Group): { SystemCallback }
+function Group.GetFlattened(self: Group): { SystemCallback }
 	if self._flattenedDirty then
 		rebuildFlattened(self)
 	end
@@ -172,24 +190,4 @@ function group.GetFlattened(self: Group): { SystemCallback }
 	return self._flattened
 end
 
-local function newGroup(name: string): Group
-	return setmetatable({
-		kind = "Group",
-
-		_children = {},
-		_flattened = {},
-		_childrenOrderDirty = false,
-		_flattenedDirty = false,
-
-		-- NodeBase
-		name = name,
-		parent = nil,
-		enabled = true,
-		_dependencies = {},
-		_dependents = {},
-	}, group) :: any
-end
-
-return table.freeze({
-	new = newGroup,
-})
+return table.freeze(Group)

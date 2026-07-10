@@ -19,6 +19,8 @@ export type System = setmetatable<NodeBase & {
 export type SystemImpl = {
 	__index: SystemImpl,
 
+	new: (name: string, callback: SystemCallback) -> System,
+
 	Run: (self: System, dt: number) -> (),
 
 	-- NodeBase
@@ -40,6 +42,8 @@ export type Group = setmetatable<NodeBase & {
 
 export type GroupImpl = {
 	__index: GroupImpl,
+
+	new: (name: string) -> Group,
 
 	Add: (self: Group, child: Node) -> (),
 	Remove: (self: Group, child: Node) -> (),

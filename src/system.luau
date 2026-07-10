@@ -5,24 +5,10 @@ type System = types.System
 type SystemImpl = types.SystemImpl
 type SystemCallback = types.SystemCallback
 
-local system = {} :: SystemImpl
-system.__index = system
+local System = {} :: SystemImpl
+System.__index = System
 
-system.Before = node.insertBefore :: any
-system.After = node.insertAfter :: any
-system.In = node.insertIn :: any
-system.Resolve = node.resolve :: any
-system.SetEnabled = node.setEnabled
-
-function system.Run(self: System, dt: number)
-	if not self.enabled then
-		return
-	end
-
-	self.callback(dt)
-end
-
-local function newSystem(name: string, callback: SystemCallback): System
+function System.new(name: string, callback: SystemCallback): System
 	return setmetatable({
 		kind = "System",
 
@@ -34,9 +20,21 @@ local function newSystem(name: string, callback: SystemCallback): System
 		enabled = true,
 		_dependencies = {},
 		_dependents = {},
-	}, system) :: any
+	}, System) :: any
 end
 
-return table.freeze({
-	new = newSystem,
-})
+System.Before = node.insertBefore :: any
+System.After = node.insertAfter :: any
+System.In = node.insertIn :: any
+System.Resolve = node.resolve :: any
+System.SetEnabled = node.setEnabled
+
+function System.Run(self: System, dt: number)
+	if not self.enabled then
+		return
+	end
+
+	self.callback(dt)
+end
+
+return table.freeze(System)
