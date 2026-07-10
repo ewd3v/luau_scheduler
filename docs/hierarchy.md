@@ -40,7 +40,7 @@ local group2 = scheduler.newGroup("group2"):In(group1)
 local function step()
     print("Hello from mySystem")
 end
-scheduler.newSystem("system", step):In(myGroup)
+scheduler.newSystem("system", step):In(group2)
 
 group1:Run(0) --> Hello from mySystem!
 ```
