@@ -39,6 +39,17 @@ test.suite("system", function(suite)
 		system:Run(0)
 		assert.eq(ran, true)
 	end)
+
+	suite:case("doesn't run disabled", function(assert)
+		local ran = false
+		local system = newSystem(nil, function()
+			ran = true
+		end)
+
+		system:SetEnabled(false)
+		system:Run(0)
+		assert.eq(ran, false)
+	end)
 end)
 
 test.suite("group", function(suite)
@@ -133,13 +144,77 @@ test.suite("hierarchy", function(suite)
 		newSystem(nil, counter):In(child1_1)
 
 		local child2 = newGroup():In(parent)
-		newSystem(nil, counter):In(child1)
+		newSystem(nil, counter):In(child2)
 
 		local child2_1 = newGroup():In(child2)
 		newSystem(nil, counter):In(child2_1)
 
 		parent:Run(0)
 		assert.eq(ran, 5)
+	end)
+
+	suite:case("skips disabled children", function(assert)
+		local ran = 0
+		local function counter()
+			ran += 1
+		end
+
+		local parent = newGroup()
+		newSystem(nil, counter):In(parent)
+		newSystem(nil, counter):In(parent):SetEnabled(false)
+		newSystem(nil, counter):In(parent):SetEnabled(false)
+
+		parent:Run(0)
+		assert.eq(ran, 1)
+	end)
+
+	suite:case("skips disabled groups", function(assert)
+		local ran = 0
+		local function counter()
+			ran += 1
+		end
+
+		local parent = newGroup()
+		newSystem(nil, counter):In(parent)
+
+		local child1 = newGroup():In(parent)
+		child1:SetEnabled(false)
+		newSystem(nil, counter):In(child1)
+
+		local child1_1 = newGroup():In(child1)
+		newSystem(nil, counter):In(child1_1)
+
+		local child2 = newGroup():In(parent)
+		newSystem(nil, counter):In(child2)
+
+		parent:Run(0)
+		assert.eq(ran, 2)
+	end)
+
+	suite:case("skips disabled descendants", function(assert)
+		local ran = 0
+		local function counter()
+			ran += 1
+		end
+
+		local parent = newGroup()
+		newSystem(nil, counter):In(parent)
+
+		local child1 = newGroup():In(parent)
+		newSystem(nil, counter):In(child1)
+
+		local child1_1 = newGroup():In(child1)
+		child1_1:SetEnabled(false)
+		newSystem(nil, counter):In(child1_1)
+
+		local child2 = newGroup():In(parent)
+		newSystem(nil, counter):In(child2)
+
+		local child2_1 = newGroup():In(child2)
+		newSystem(nil, counter):In(child2_1):SetEnabled(false)
+
+		parent:Run(0)
+		assert.eq(ran, 3)
 	end)
 end)
 
