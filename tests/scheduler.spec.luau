@@ -1,6 +1,7 @@
 local test = require("@std/test")
 local testTypes = require("@std/test/types")
 
+local nodeUtils = require("../src/node")
 local scheduler = require("../src")
 
 local function testNewNode(assert: testTypes.Asserts, node: scheduler.Node)
@@ -215,6 +216,76 @@ test.suite("hierarchy", function(suite)
 
 		parent:Run(0)
 		assert.eq(ran, 3)
+	end)
+
+	suite:case("node.markChildrenOrderDirty", function(assert)
+		local root = newGroup()
+		nodeUtils.markChildrenOrderDirty(root)
+
+		assert.eq(root.childrenOrderDirty, true)
+		assert.eq(root.flattenedDirty, true)
+	end)
+
+	suite:case("parenting marks children order dirty", function(assert)
+		local root = newGroup()
+		newSystem():In(root)
+
+		assert.eq(root.childrenOrderDirty, true)
+	end)
+
+	suite:case("node:Before() marks children order dirty", function(assert)
+		local root = newGroup()
+		local node1 = newSystem():In(root)
+		local node2 = newSystem():In(root)
+		root:Resolve()
+
+		node2:Before(node1)
+		assert.eq(root.childrenOrderDirty, true)
+	end)
+
+	suite:case("node:After() marks children order dirty", function(assert)
+		local root = newGroup()
+		local node1 = newSystem():In(root)
+		local node2 = newSystem():In(root)
+		root:Resolve()
+
+		node2:Before(node1)
+		assert.eq(root.childrenOrderDirty, true)
+	end)
+
+	suite:case("node:Resolve() removes dirty flags", function(assert)
+		local root = newGroup()
+		nodeUtils.markChildrenOrderDirty(root)
+		root:Resolve()
+
+		assert.eq(root.childrenOrderDirty, false)
+		assert.eq(root.flattenedDirty, false)
+	end)
+
+	suite:case("node:Resolve() removes descendant dirty flags", function(assert)
+		local root = newGroup()
+		local group = newGroup():In(root)
+		nodeUtils.markChildrenOrderDirty(group)
+		root:Resolve()
+
+		assert.eq(group.childrenOrderDirty, false)
+		assert.eq(group.flattenedDirty, false)
+
+		assert.eq(root.childrenOrderDirty, false)
+		assert.eq(root.flattenedDirty, false)
+	end)
+
+	suite:case("flattenedDirty bubbles up", function(assert)
+		local root = newGroup()
+		local group = newGroup():In(root)
+		root:Resolve()
+		nodeUtils.markChildrenOrderDirty(group)
+
+		assert.eq(group.childrenOrderDirty, true)
+		assert.eq(group.flattenedDirty, true)
+
+		assert.eq(root.childrenOrderDirty, false)
+		assert.eq(root.flattenedDirty, true)
 	end)
 end)
 
