@@ -6,13 +6,13 @@ type Group = types.Group
 local function markAncestorsFlattenedDirty(group: Group)
 	local ancestor = group
 	while ancestor ~= nil do
-		ancestor.flattenedDirty = true
+		ancestor._flattenedDirty = true
 		ancestor = ancestor.parent
 	end
 end
 
 local function markChildrenOrderDirty(group: Group)
-	group.childrenOrderDirty = true
+	group._childrenOrderDirty = true
 	markAncestorsFlattenedDirty(group)
 end
 
@@ -50,8 +50,8 @@ end
 
 local function insertBefore(node: Node, dependent: Node): Node
 	local parent = resolveNodeParent(node, dependent)
-	dependent.dependencies[node] = true
-	node.dependents[dependent] = true
+	dependent._dependencies[node] = true
+	node._dependents[dependent] = true
 	markChildrenOrderDirty(parent)
 
 	return node
@@ -59,8 +59,8 @@ end
 
 local function insertAfter(node: Node, dependency: Node): Node
 	local parent = resolveNodeParent(node, dependency)
-	node.dependencies[dependency] = true
-	dependency.dependents[node] = true
+	node._dependencies[dependency] = true
+	dependency._dependents[node] = true
 	markChildrenOrderDirty(parent)
 
 	return node

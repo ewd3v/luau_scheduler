@@ -23,7 +23,7 @@ end
 
 -- Kahn's algorithm
 local function sortChildren(group: Group)
-	local children = group.children
+	local children = group._children
 	local inDegree: { [Node]: number } = {}
 	local queue: { Node } = {}
 	local sorted: { Node } = {}
@@ -33,7 +33,7 @@ local function sortChildren(group: Group)
 	end
 
 	for _, child in children do
-		for depenency in child.dependencies do
+		for depenency in child._dependencies do
 			if inDegree[depenency] == nil then
 				continue
 			end
@@ -55,7 +55,7 @@ local function sortChildren(group: Group)
 
 		table.insert(sorted, headNode)
 
-		for dependent in headNode.dependents do
+		for dependent in headNode._dependents do
 			local degree = inDegree[dependent]
 			if degree == nil then
 				continue
@@ -81,8 +81,8 @@ local function sortChildren(group: Group)
 		)
 	end
 
-	group.children = sorted
-	group.childrenOrderDirty = false
+	group._children = sorted
+	group._childrenOrderDirty = false
 end
 
 local function rebuildFlattened(group: Group)
@@ -101,8 +101,8 @@ local function rebuildFlattened(group: Group)
 		end
 	end
 
-	group.flattened = flattened
-	group.flattenedDirty = false
+	group._flattened = flattened
+	group._flattenedDirty = false
 end
 
 local group = {} :: GroupImpl
@@ -120,28 +120,28 @@ function group.Add(self: Group, child: Node)
 	end
 
 	child.parent = self
-	table.insert(self.children, child)
+	table.insert(self._children, child)
 	markChildrenOrderDirty(self)
 end
 
 function group.Remove(self: Group, child: Node)
-	local index = table.find(self.children, child)
+	local index = table.find(self._children, child)
 	if index == nil then
 		return
 	end
 
 	child.parent = nil
-	table.remove(self.children, index)
+	table.remove(self._children, index)
 
-	for dependent in child.dependents do
-		dependent.dependencies[child] = nil
+	for dependent in child._dependents do
+		dependent._dependencies[child] = nil
 	end
-	table.clear(child.dependents)
+	table.clear(child._dependents)
 
-	for dependency in child.dependencies do
-		dependency.dependents[child] = nil
+	for dependency in child._dependencies do
+		dependency._dependents[child] = nil
 	end
-	table.clear(child.dependencies)
+	table.clear(child._dependencies)
 
 	markChildrenOrderDirty(self)
 end
@@ -157,36 +157,36 @@ function group.Run(self: Group, dt: number)
 end
 
 function group.GetChildren(self: Group): { Node }
-	if self.childrenOrderDirty then
+	if self._childrenOrderDirty then
 		sortChildren(self)
 	end
 
-	return self.children
+	return self._children
 end
 
 function group.GetFlattened(self: Group): { SystemCallback }
-	if self.flattenedDirty then
+	if self._flattenedDirty then
 		rebuildFlattened(self)
 	end
 
-	return self.flattened
+	return self._flattened
 end
 
 local function newGroup(name: string): Group
 	return setmetatable({
 		kind = "Group",
 
-		children = {},
-		flattened = {},
-		childrenOrderDirty = false,
-		flattenedDirty = false,
+		_children = {},
+		_flattened = {},
+		_childrenOrderDirty = false,
+		_flattenedDirty = false,
 
 		-- NodeBase
 		name = name,
 		parent = nil,
 		enabled = true,
-		dependencies = {},
-		dependents = {},
+		_dependencies = {},
+		_dependents = {},
 	}, group) :: any
 end
 

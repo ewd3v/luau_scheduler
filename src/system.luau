@@ -32,8 +32,8 @@ local function newSystem(name: string, callback: SystemCallback): System
 		name = name,
 		parent = nil,
 		enabled = true,
-		dependencies = {},
-		dependents = {},
+		_dependencies = {},
+		_dependents = {},
 	}, system) :: any
 end
 

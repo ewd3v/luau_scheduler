@@ -4,8 +4,8 @@ type NodeBase = {
 	name: string,
 	parent: Group?,
 	enabled: boolean,
-	dependencies: { [Node]: true },
-	dependents: { [Node]: true },
+	_dependencies: { [Node]: true },
+	_dependents: { [Node]: true },
 }
 
 export type SystemCallback = (dt: number) -> ()
@@ -32,10 +32,10 @@ export type SystemImpl = {
 export type Group = setmetatable<NodeBase & {
 	kind: "Group",
 
-	children: { Node },
-	flattened: { SystemCallback },
-	childrenOrderDirty: boolean,
-	flattenedDirty: boolean,
+	_children: { Node },
+	_flattened: { SystemCallback },
+	_childrenOrderDirty: boolean,
+	_flattenedDirty: boolean,
 }, GroupImpl>
 
 export type GroupImpl = {
