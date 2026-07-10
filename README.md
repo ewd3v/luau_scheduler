@@ -1,2 +1,2 @@
 # scheduler
-A hierarchical, dependency-sorted scheduler for Luau
+A hierarchical, dependency-sorted scheduler for [Luau](https://luau.org/)
