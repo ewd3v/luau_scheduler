@@ -11,7 +11,7 @@ local markChildrenOrderDirty = node.markChildrenOrderDirty
 local function getStuck(children: { Node }, inDegree: { [Node]: number }): { string }
 	local stuck = {}
 	for _, child in children do
-		if inDegree[child] <= 0 then
+		if not (inDegree[child] > 0) then
 			continue
 		end
 
@@ -63,7 +63,7 @@ local function sortChildren(group: Group)
 
 			degree -= 1
 			inDegree[dependent] = degree
-			if degree ~= 0 then
+			if degree > 0 then
 				continue
 			end
 
