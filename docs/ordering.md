@@ -8,6 +8,8 @@ This library makes no ordering guarantee by default. When a group is ran, its ch
 
 The library does however provide methods so you can guarantee that a node will run before or after another node.
 
+## Before & After
+
 You can use [Node:Before()](/api/node#insertBefore) to make a node run before another node.
 
 ```lua

@@ -4,6 +4,8 @@ sidebar_position: 3
 
 # Hierarchy
 
+## Groups
+
 You can assign a system to a group via group:Add(), and when that group runs, so does all systems assigned to it.
 ```lua
 local scheduler = require(path.to.scheduler)
