@@ -113,6 +113,9 @@ end
 local Group = {} :: GroupImpl
 Group.__index = Group
 
+--[=[
+	Creates a new [Group] with the given name.
+]=]
 function Group.new(name: string): Group
 	--[=[
 		@within Group
