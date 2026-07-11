@@ -40,5 +40,5 @@ export type Group = types.Group
 return table.freeze({
 	newGroup = require("@self/group").new,
 	newSystem = require("@self/system").new,
-	_node = require("@self/node"),
+	node = require("@self/node"),
 })
