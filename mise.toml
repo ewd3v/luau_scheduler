@@ -10,6 +10,7 @@ cargo-binstall = "latest"
 
 [vars]
 lint_paths = "src tests scripts"
+docs_out_dir = "_site"
 
 [tasks."scaffold"]
 description = "Scaffolds a new project"
@@ -102,3 +103,13 @@ raw_args = true
 run = "pesde update"
 sources = ["pesde.toml"]
 outputs = ["**/pesde.lock"]
+
+[tasks."docs:dev"]
+description = "Runs a local docs page with live-reload"
+raw_args = true
+run = "moonwave dev"
+
+[tasks."docs:build"]
+description = "Builds the docs website"
+raw_args = true
+run = "moonwave build --out-dir {{vars.docs_out_dir}}"
