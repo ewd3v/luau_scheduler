@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Introduction
 
-This is a scheduler library for [Luau](https://luau.org/), which can help you organize systems (functions) an easily define in what order you'd like to run them in.
+This is a scheduler library for [Luau](https://luau.org/), which can help you organize systems (functions) an easily define in what order you'd like to run them in. If you're using an [ECS](https://devforum.roblox.com/t/all-about-entity-component-system/1664447) you may find this useful for ordering your systems.
 
 It's hierarchical, meaning you work with nodes, which have one parent, and can have multiple children. So called tree structures.
 And it's dependency-sorted, meaning you can assign dependencies to nodes to easily define the order you'd like them to run in.
