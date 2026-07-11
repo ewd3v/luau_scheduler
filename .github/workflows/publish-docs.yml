@@ -29,8 +29,6 @@ jobs:
 
       - name: Setup Mise
         uses: jdx/mise-action@v4
-        with:
-          install: false
       
       - name: Setup Pages
         uses: actions/configure-pages@v6
