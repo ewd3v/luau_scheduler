@@ -43,20 +43,20 @@ root:Run(0)
 --> node2 ran!
 ```
 
+:::danger
+
+:Before() & :After() require the two nodes to share the same parent.
+
+:::
+
 :::tip
 
-You can chain :Before() & :After() with :In():
+You can chain :Before() & :After() with :In().
 
 ```lua
 local node2 = scheduler.newSystem(...):In(root):Before(node1)
 local node3 = scheduler.newSystem(...):In(root):After(node1)
 ```
-
-:::
-
-:::danger
-
-:Before() & :After() require the two nodes to share the same parent.
 
 :::
 
@@ -77,8 +77,28 @@ local updateVelocity = scheduler.newSystem("updateVelocity", ...):Before(updateP
 
 :::warning
 
-In order for implicit parenting to work, the targeted node in :Before() / :After() needs to already have a parent set.
+In order for implicit parenting to work, the targeted node needs to already have a parent set before calling :Before() / :After().
 
 Support for assigning parent at a later point will be explored in a future version.
 
 :::
+
+## Complex graphs
+
+```lua
+
+local root = scheduler.newGroup("root")
+local node1 = scheduler.newSystem("node1", wrapPrint("node1 ran!")):In(root)
+local node2 = scheduler.newSystem("node2", wrapPrint("node2 ran!")):In(root)
+local node3 = scheduler.newSystem("node3", wrapPrint("node3 ran!")):In(root)
+local node4 = scheduler.newSystem("node4", wrapPrint("node4 ran!")):In(root)
+
+node2:After(node1)
+node3:Before(node1):Before(node2):After(node4)
+
+root:Run(0)
+--> node4 ran!
+--> node3 ran!
+--> node1 ran!
+--> node2 ran!
+```
