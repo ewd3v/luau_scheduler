@@ -8,6 +8,9 @@ on:
       - ".github/workflows/publish-docs.yml"
       - "docs/**"
       - "src/**"
+      - "moonwave.toml"
+      - "README.md"
+      - "CHANGELOG.md"
 
 permissions:
   contents: read
