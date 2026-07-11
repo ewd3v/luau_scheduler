@@ -125,7 +125,6 @@ export type GroupImpl = {
 	new: (name: string) -> Group,
 
 	Add: (self: Group, child: Node) -> (),
-	Remove: (self: Group, child: Node) -> (),
 	Run: (self: Group, dt: number) -> (),
 	GetChildren: (self: Group) -> { Node },
 	GetFlattened: (self: Group) -> { SystemCallback },

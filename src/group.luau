@@ -246,36 +246,6 @@ end
 --[=[
 	@within Group
 
-	Removes the given [Node] from this group.
-
-	@method Remove
-	@param child Node
-]=]
-function Group.Remove(self: Group, child: Node)
-	local index = table.find(self._children, child)
-	if index == nil then
-		return
-	end
-
-	child.parent = nil
-	table.remove(self._children, index)
-
-	for dependent in child._dependents do
-		dependent._dependencies[child] = nil
-	end
-	table.clear(child._dependents)
-
-	for dependency in child._dependencies do
-		dependency._dependents[child] = nil
-	end
-	table.clear(child._dependencies)
-
-	markChildrenOrderDirty(self)
-end
-
---[=[
-	@within Group
-
 	Runs all descendant [systems](System) in their sorted order.
 
 	@method Run
