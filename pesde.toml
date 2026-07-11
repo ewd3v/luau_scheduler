@@ -14,4 +14,4 @@ lib = "src/init.luau"
 default = "https://github.com/pesde-pkg/index"
 
 [dev_dependencies]
-lute_std_lint = { name = "ewdev/lute_std_lint", version = "^0.1.0" }
+lute_std_lint = { name = "ewdev/lute_std_lint", version = "^0.1.0", target = "luau" }
