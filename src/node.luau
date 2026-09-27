@@ -47,7 +47,8 @@ local function getNodeDebugPathName(node: Node?): string
 	local path = node.name
 	local current = node.parent
 	while current ~= nil do
-		path = `{current.name}/{path}`
+		path = current.name .. "/" .. path
+		current = current.parent
 	end
 
 	return path

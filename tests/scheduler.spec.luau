@@ -1,7 +1,6 @@
 local test = require("@std/test")
 local testTypes = require("@std/test/types")
 
-local nodeUtils = require("../src/node")
 local scheduler = require("../src")
 
 local function testNewNode(assert: testTypes.Asserts, node: scheduler.Node)
@@ -65,6 +64,19 @@ test.suite("group", function(suite)
 		assert.eq(group.name, groupName)
 		assert.eq(group.parent, nil)
 		testNewNode(assert, group)
+	end)
+end)
+
+test.suite("node", function(suite)
+	suite:case("node.getNodeDebugPathName", function(assert)
+		local nodeA = newGroup("a")
+		assert.eq(scheduler.node.getNodeDebugPathName(nodeA), "a")
+
+		local nodeB = newGroup("b"):In(nodeA)
+		assert.eq(scheduler.node.getNodeDebugPathName(nodeB), "a/b")
+
+		local nodeC = newGroup("c"):In(nodeB)
+		assert.eq(scheduler.node.getNodeDebugPathName(nodeC), "a/b/c")
 	end)
 end)
 
@@ -220,7 +232,7 @@ test.suite("hierarchy", function(suite)
 
 	suite:case("node.markChildrenOrderDirty", function(assert)
 		local root = newGroup()
-		nodeUtils.markChildrenOrderDirty(root)
+		scheduler.node.markChildrenOrderDirty(root)
 
 		assert.eq(root._childrenOrderDirty, true)
 		assert.eq(root._flattenedDirty, true)
@@ -255,7 +267,7 @@ test.suite("hierarchy", function(suite)
 
 	suite:case("node:Resolve() removes dirty flags", function(assert)
 		local root = newGroup()
-		nodeUtils.markChildrenOrderDirty(root)
+		scheduler.node.markChildrenOrderDirty(root)
 		root:Resolve()
 
 		assert.eq(root._childrenOrderDirty, false)
@@ -265,7 +277,7 @@ test.suite("hierarchy", function(suite)
 	suite:case("node:Resolve() removes descendant dirty flags", function(assert)
 		local root = newGroup()
 		local group = newGroup():In(root)
-		nodeUtils.markChildrenOrderDirty(group)
+		scheduler.node.markChildrenOrderDirty(group)
 		root:Resolve()
 
 		assert.eq(group._childrenOrderDirty, false)
@@ -279,7 +291,7 @@ test.suite("hierarchy", function(suite)
 		local root = newGroup()
 		local group = newGroup():In(root)
 		root:Resolve()
-		nodeUtils.markChildrenOrderDirty(group)
+		scheduler.node.markChildrenOrderDirty(group)
 
 		assert.eq(group._childrenOrderDirty, true)
 		assert.eq(group._flattenedDirty, true)
