@@ -1,5 +1,11 @@
 # ewdev/scheduler
 
+## 0.1.2
+
+### Patch Changes
+
+- d9d0213: fix node.getNodeDebugPathName() causing an infinite loop
+
 ## 0.1.1
 
 ### Patch Changes
